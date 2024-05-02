@@ -1,0 +1,28 @@
+<launch>
+    <arg name="capture_width_" default="1920"/>
+    <arg name="capture_height_" default="1080"/>
+    <arg name="display_width_" default="960"/>
+    <arg name="display_height_" default="540"/>
+    <arg name="framerate_" default="30"/>
+    <arg name="flip_method_" default="0"/>
+
+    <arg name="camera_topic_arg_0" default="/camera0/image_raw"/>
+    <arg name="camera_topic_arg_1" default="/camera1/image_raw"/>
+    
+    <arg name="image_format_arg" default="bgr8"/>
+    <arg name="video_capture_arg_0" default="nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=21/1, format=NV12 ! nvvidconv ! video/x-raw, width=960, height=616 ! nvvidconv ! videoconvert ! video/x-raw, format=GRAY8 ! appsink"/>
+    <arg name="video_capture_arg_1" default="nvarguscamerasrc sensor-id=1 ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=21/1, format=NV12 ! nvvidconv ! video/x-raw, width=960, height=616 ! nvvidconv ! videoconvert ! video/x-raw, format=GRAY8 ! appsink"/>
+
+    <node name="raspberry_pi_dual_camera_publisher_0" type="dual_camera_publisher_node" pkg="dual_camera_publisher">
+        <param name="camera_id_" type="int" value="0"/> 
+        <param name="video_capture_" type="string" value="$(arg video_capture_arg_0)"/> 
+        <param name="image_format_" type="string" value="$(arg image_format_arg)"/>  
+        <param name="camera_topic_0_" type="string" value="$(arg camera_topic_arg_0)"/> 
+        <param name="camera_topic_1_" type="string" value="$(arg camera_topic_arg_1)"/> 
+    </node>
+
+    <node name="disparity_calculator_node" type="disparity_calculator_node" pkg="disparity_calculator">
+    <param name="image_format_" type="string" value="$(arg image_format_arg)"/> 
+    </node>
+
+</launch>

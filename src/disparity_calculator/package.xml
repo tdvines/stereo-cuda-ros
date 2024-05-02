@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>image_cuda</name>
+  <name>disparity_calculator</name>
   <version>0.0.0</version>
-  <description>The image_cuda package</description>
+  <description>
+    Package for disparity calculator functionality.
+  </description>
 
   <maintainer email="jetson@todo.todo">jetson</maintainer>
 
   <license>TODO</license>
 
-for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>cv_bridge</build_depend>
@@ -21,6 +22,7 @@ for building documentation: -->
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>sensor_msgs</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
+
   <exec_depend>cv_bridge</exec_depend>
   <exec_depend>image_transport</exec_depend>
   <exec_depend>roscpp</exec_depend>

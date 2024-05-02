@@ -22,7 +22,7 @@ namespace CSICameraROS {
         bool read(cv::Mat& frame);
         void stop();
         void release();
-        image_transport::Publisher image_pub_0; // Change this name to avoid confusion
+        image_transport::Publisher image_pub_0;
 
     private:
         int camera_id;

@@ -77,13 +77,11 @@ namespace CSICameraROS {
     }
 }
 
-
 int main(int argc, char** argv) {
     ros::init(argc, argv, "raspberry_pi_dual_camera_publisher");
     ros::NodeHandle nh;
     ros::NodeHandle private_nh("~");
 
-    // std::string camera_topic_0, camera_topic_1;
     private_nh.param<std::string>("camera_topic_0_", camera_topic_0, "/camera0/image_raw");
     private_nh.param<std::string>("camera_topic_1_", camera_topic_1, "/camera1/image_raw");
 
@@ -96,14 +94,12 @@ int main(int argc, char** argv) {
     int framerate = 20;
     int flip_method = 0;
 
-    // GStreamer pipeline for Camera 0
     std::string gstreamer_pipeline_0 = "nvarguscamerasrc sensor-id=" + std::to_string(camera_id_0)
         + " ! video/x-raw(memory:NVMM), width=(int)" + std::to_string(capture_width) + ", height=(int)" + std::to_string(capture_height)
         + ", framerate=(fraction)" + std::to_string(framerate) + "/1 ! nvvidconv flip-method=" + std::to_string(flip_method)
         + " ! video/x-raw, width=(int)" + std::to_string(display_width) + ", height=(int)" + std::to_string(display_height)
         + ", format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink";
 
-    // GStreamer pipeline for Camera 1
     std::string gstreamer_pipeline_1 = "nvarguscamerasrc sensor-id=" + std::to_string(camera_id_1)
         + " ! video/x-raw(memory:NVMM), width=(int)" + std::to_string(capture_width) + ", height=(int)" + std::to_string(capture_height)
         + ", framerate=(fraction)" + std::to_string(framerate) + "/1 ! nvvidconv flip-method=" + std::to_string(flip_method)
@@ -116,16 +112,12 @@ int main(int argc, char** argv) {
     camera_pub_0.start(gstreamer_pipeline_0);
     camera_pub_1.start(gstreamer_pipeline_1);
 
-    // cv::namedWindow("CSI Camera 0", cv::WINDOW_AUTOSIZE);
-    // cv::namedWindow("CSI Camera 1", cv::WINDOW_AUTOSIZE);
-
     while (ros::ok()) {
         cv::Mat frame_0, frame_1;
         bool success_0 = camera_pub_0.read(frame_0);
         bool success_1 = camera_pub_1.read(frame_1);
 
         if (success_0) {
-            cv::imshow("CSI Camera 0", frame_0);
             sensor_msgs::ImagePtr msg_0 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame_0).toImageMsg();
             camera_pub_0.image_pub_0.publish(msg_0);
         } else {
@@ -133,7 +125,6 @@ int main(int argc, char** argv) {
         }
 
         if (success_1) {
-            cv::imshow("CSI Camera 1", frame_1);
             sensor_msgs::ImagePtr msg_1 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame_1).toImageMsg();
             camera_pub_1.image_pub_0.publish(msg_1);
         } else {
